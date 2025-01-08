@@ -1,9 +1,277 @@
-# MangaVerse
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MangaVerse</title>
+    <!-- Подключаем красивый шрифт из Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #B3A1D1; /* Небесно-фиолетовый фон */
+        }
 
-MangaVerse - это веб-сайт, предоставляющий информацию о манге. Этот проект полностью написан на HTML.
+        header {
+            background-color: #4F3D7F; /* Темно-фиолетовый для шапки */
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
 
-## Установка
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
 
-1. Клонируйте репозиторий:
-   ```sh
-   git clone https://github.com/sozdata/MangaVerse.git
+        /* Добавление поля поиска */
+        .search-bar {
+            margin-top: 10px;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .search-bar button {
+            padding: 10px 15px;
+            font-size: 1em;
+            margin-left: 10px;
+            border: none;
+            background-color: #6A4C93;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: #4F3D7F;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .character-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .character-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .character-card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .character-card h3 {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .character-details {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .character-details img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .character-details h2 {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .character-details p {
+            color: #555;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            .characters-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .character-card {
+                margin: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.2em;
+            }
+
+            .characters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .character-card {
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>MangaVerse</h1>
+        <!-- Поле для поиска -->
+        <div class="search-bar">
+            <input type="text" placeholder="Поиск персонажей..." id="search-input">
+            <button onclick="searchCharacter()">Поиск</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Карточки персонажей -->
+        <div class="characters-grid">
+            <!-- Сон Джин Ву -->
+            <div class="character-card" onclick="showDetails('Сон Джин Ву', 'Герой манхвы Solo Leveling. Он превратился из слабейшего охотника в самого могущественного.', './images/sungjinwoo.jpg')">
+                <img src="./images/sungjinwoo.jpg" alt="Сон Джин Ву">
+                <h3>Сон Джин Ву</h3>
+            </div>
+
+            <!-- Гоку -->
+            <div class="character-card" onclick="showDetails('Гоку', 'Главный герой манги Dragon Ball. Очень сильный и добрый персонаж, тренируется, чтобы стать сильнейшим.', './images/goku.jpg')">
+                <img src="./images/goku.jpg" alt="Гоку">
+                <h3>Гоку</h3>
+            </div>
+
+            <!-- Лелуш -->
+            <div class="character-card" onclick="showDetails('Лелуш', 'Герой Code Geass, лидер повстанцев, который использует свои способности, чтобы изменить мир.', './images/lelouch.jpg')">
+                <img src="./images/lelouch.jpg" alt="Лелуш">
+                <h3>Лелуш</h3>
+            </div>
+
+            <!-- Эрен -->
+            <div class="character-card" onclick="showDetails('Эрен', 'Герой манги Attack on Titan. Бороться с гигантами и защищать человечество от угрозы.', './images/eren.jpg')">
+                <img src="./images/eren.jpg" alt="Эрен">
+                <h3>Эрен</h3>
+            </div>
+
+            <!-- Наруто -->
+            <div class="character-card" onclick="showDetails('Наруто', 'Герой манги Naruto. Мечтает стать Хокаге и защитить свою деревню.', './images/naruto.jpg')">
+                <img src="./images/naruto.jpg" alt="Наруто">
+                <h3>Наруто</h3>
+            </div>
+
+            <!-- Лайт Ягами -->
+            <div class="character-card" onclick="showDetails('Лайт Ягами', 'Герой манги Death Note, использует тетрадь смерти, чтобы избавиться от преступников.', './images/light.jpg')">
+                <img src="./images/light.jpg" alt="Лайт Ягами">
+                <h3>Лайт Ягами</h3>
+            </div>
+
+            <!-- Лейтенант Хитори -->
+            <div class="character-card" onclick="showDetails('Лейтенант Хитори', 'Герой манги Bleach, один из самых сильных персонажей, защищающий мир от зла.', './images/hitori.jpg')">
+                <img src="./images/hitori.jpg" alt="Лейтенант Хитори">
+                <h3>Лейтенант Хитори</h3>
+            </div>
+
+            <!-- Ичиго Куросаки -->
+            <div class="character-card" onclick="showDetails('Ичиго Куросаки', 'Герой манги Bleach, подросток, обладающий силой Шинигами, сражается с демонами.', './images/ichigo.jpg')">
+                <img src="./images/ichigo.jpg" alt="Ичиго Куросаки">
+                <h3>Ичиго Куросаки</h3>
+            </div>
+
+            <!-- Римуру Темпест -->
+            <div class="character-card" onclick="showDetails('Римуру Темпест', 'Герой манги That Time I Got Reincarnated as a Slime. Он стал слизнем и стремится создать мир для всех существ.', './images/rimuru.jpg')">
+                <img src="./images/rimuru.jpg" alt="Римуру Темпест">
+                <h3>Римуру Темпест</h3>
+            </div>
+
+            <!-- Добавьте другие персонажи по аналогии -->
+        </div>
+    </div>
+
+    <!-- Всплывающее окно -->
+    <div class="overlay" id="overlay" onclick="closeDetails()"></div>
+    <div class="character-details" id="character-details">
+        <img id="character-img" src="" alt="Персонаж">
+        <h2 id="character-name"></h2>
+        <p id="character-description"></p>
+    </div>
+
+    <script>
+        function showDetails(name, description, imgSrc) {
+            document.getElementById('character-name').innerText = name;
+            document.getElementById('character-description').innerText = description;
+            document.getElementById('character-img').src = imgSrc;
+            document.getElementById('character-details').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closeDetails() {
+            document.getElementById('character-details').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function searchCharacter() {
+            var input = document.getElementById("search-input").value.toLowerCase();
+            var cards = document.querySelectorAll(".character-card");
+
+            cards.forEach(function(card) {
+                var characterName = card.querySelector("h3").textContent.toLowerCase();
+                if (characterName.includes(input)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
